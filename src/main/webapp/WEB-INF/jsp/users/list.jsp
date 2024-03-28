@@ -61,8 +61,6 @@
         <tr>
             <td onclick="jsView('${user.userid}')"  style="cursor:pointer;">${user.userid}</td>
             <td><a href="user.do?action=read&userid=${user.userid}">${user.name}</a></td>
-            <td>${user.userid}</td>
-            <td>${user.name}</td>
             <td>${user.email}</td>
             <td>${user.birth}</td>
             <td>${user.gender}</td>
