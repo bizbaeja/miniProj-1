@@ -74,12 +74,12 @@ public class UserDAO {
 		
 		try(ResultSet rs = hobbyListPstmt.executeQuery()) {
 			while(rs.next()) {
-				var hobbyVO = new HobbyVO(
-						rs.getInt("hobbyid"),
-						rs.getString("hobbyname")
-						);
+//				var hobbyVO = new HobbyVO(
+//						rs.getInt("hobbyid"),
+//						rs.getString("hobbyname")
+//						);
 
-				hobbies.put(hobbyVO.getHobbyid(), hobbyVO.getHobbyname());
+				hobbies.put(rs.getInt("hobbyid"), rs.getString("hobbyname"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -90,7 +90,7 @@ public class UserDAO {
 
 	public List<UserVO> list(UserVO user) {
 		List<UserVO> list1 = new ArrayList<>();
-		Map<Integer, String> hobbyMap = new HashMap<>();
+		//Map<Integer, String> hobbyMap = new HashMap<>();
 
 		try {
 
@@ -105,14 +105,14 @@ public class UserDAO {
 			}
 			rs.close();
 
-			ResultSet hs = hobbyListPstmt.executeQuery();
-			while (hs.next()) {
-				int hobbyId = hs.getInt("hobbyid"); // 취미 ID를 Integer 형태로 가져옵니다.
-				String hobbyName = hs.getString("hobbyname"); // 취미 이름을 가져옵니다.
-				hobbyMap.put(hobbyId, hobbyName);
-
-			}
-			hs.close();
+//			ResultSet hs = hobbyListPstmt.executeQuery();
+//			while (hs.next()) {
+//				int hobbyId = hs.getInt("hobbyid"); // 취미 ID를 Integer 형태로 가져옵니다.
+//				String hobbyName = hs.getString("hobbyname"); // 취미 이름을 가져옵니다.
+//				hobbyMap.put(hobbyId, hobbyName);
+//
+//			}
+//			hs.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();

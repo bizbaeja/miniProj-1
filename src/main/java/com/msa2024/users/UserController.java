@@ -84,24 +84,24 @@ public class UserController  {
 		request.setAttribute("hobbies", hobbyVO);
 		return "read";
 	}
-    public Object update(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+    public Object update(HttpServletRequest request, UserVO updateUserVO) throws ServletException, IOException {
 		System.out.println("수정");
-		System.out.println(user.getName());	//1. 처리
+		System.out.println(updateUserVO.getName());	//1. 처리
 		
 		//바꾸려는 원본의 데이터 조회
 //		int userid = Integer.parseInt(user.getUserid());	
-	    String userid = user.getUserid();	
-		UserVO updateUserVO = userService.read(userid);
-	
-		updateUserVO.setName(user.getName());
-		updateUserVO.setEmail(user.getEmail());
-		updateUserVO.setBirth(user.getBirth());
-		updateUserVO.setGender(user.getGender());
-		updateUserVO.setRegister(user.getRegister());
-		updateUserVO.setName(user.getName());
-		updateUserVO.setHobbyid(user.getHobbyid());
-		
-		int updated = userService.update(user);
+//	    String userid = user.getUserid();	
+//		UserVO updateUserVO = userService.read(userid);
+//	
+//		updateUserVO.setName(user.getName());
+//		updateUserVO.setEmail(user.getEmail());
+//		updateUserVO.setBirth(user.getBirth());
+//		updateUserVO.setGender(user.getGender());
+//		updateUserVO.setRegister(user.getRegister());
+//		updateUserVO.setName(user.getName());
+//		updateUserVO.setHobbyid(user.getHobbyid());
+//		
+		int updated = userService.update(updateUserVO);
 		
 
 //		//2. jsp출력할 값 설정
