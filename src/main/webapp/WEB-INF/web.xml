@@ -17,34 +17,12 @@
     <servlet-name>UserServlet</servlet-name>
     <url-pattern>/user.do</url-pattern>
   </servlet-mapping>
-<!--   <servlet>
-    <description></description>
-    <display-name>HttpServlet</display-name>
-    <servlet-name>HttpServlet</servlet-name>
-    <servlet-class>javax.servlet.http.HttpServlet</servlet-class>
-  </servlet> -->
-<!--   <servlet-mapping>
-    <servlet-name>HttpServlet</servlet-name>
-    <url-pattern>/HttpServlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>DefaultServlet</display-name>
-    <servlet-name>DefaultServlet</servlet-name>
-    <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>DefaultServlet</servlet-name>
-    <url-pattern>/DefaultServlet</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>HttpServlet2</display-name>
-    <servlet-name>HttpServlet2</servlet-name>
-    <servlet-class>javax.servlet.http.HttpServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>HttpServlet2</servlet-name>
-    <url-pattern>/HttpServlet2</url-pattern>
-  </servlet-mapping> -->
+<filter>
+    <filter-name>ReusableRequestFilter</filter-name>
+    <filter-class>com.yourcompany.yourwebapp.filter.ReusableRequestFilter</filter-class>
+</filter>
+<filter-mapping>
+    <filter-name>ReusableRequestFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
 </web-app>

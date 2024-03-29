@@ -53,18 +53,18 @@
 				</div>
 
 				<div class="form-row">
-					<label for="birth">생일: </label> <input type="text" id="birth"
-						name="birth" value="${user.birth}">
+			<input type="date" name="birth" value="${user.birth}"><label for="birth">생일: </label> 
 				</div>
-
-				<div class="form-row">
-					<label for="gender">성별: </label> <input type="text" id="gender"
-						name="gender" value="${user.gender}">
-				</div>
-
+				
+				<input type="radio" id="gender1" name="gender" value="male" ${"male".equals(user.gender) ? "checked ='checked'" : ""}><label for="gender1">male</label>
+				
+				<input type="radio" id="gender2" name="gender" value="female"  ${"female".equals(user.gender) ? "checked ='checked'" : ""}><label for="gender2">female</label>
+				
+				<input type="radio" id="gender3" name="gender" value="other" ${"other".equals(user.gender) ? "checked ='checked'" : ""}><label for="gender3">other</label>
+			
 				<div class="form-row">
 					<label for="register">등록일: </label> <input type="text"
-						id="register" name="register" value="${user.register}">
+						id="register" name="register" value="${user.register}" readonly>
 				</div>
 
 				<select name="hobbyid">
@@ -106,31 +106,30 @@ function jsDelete() {
 	}
 }
 
-
 function saveChanges() {
     var userid = document.getElementById("userid").value;
-    document.getElementById("action").value = "update";
+    var form = document.getElementById("viewForm");
+    form.action.value = "update";
+    var formData = new FormData(form);
 
-    // 첫 번째 myFetch 호출: 데이터 저장
-    myFetch("user.do?action=update&userid=" + userid, "viewForm", json => {
-        if (json.status === 0) {
-            // 데이터 저장 성공, 두 번째 myFetch 호출: 페이지 이동
-            myFetch("user.do", "viewForm", json => {
-                if(json.status === 0) {
-                    alert("회원정보를 수정하고 페이지를 이동합니다.");
-                    window.location.href = "user.do?action=read&userid=" + userid;
-                } else {
-                    // 두 번째 myFetch 실패
-                    alert(json.statusMessage);
-                }
-            });
-        } else {
-            // 첫 번째 myFetch 실패
-            alert(json.statusMessage);
-        }
-    });
+    // Check if the user confirms the update before making the call
+    if (confirm("수정하시겠습니까?")) {
+        // myFetch call to save the data
+        myFetch("user.do", formData, json => {
+            if (json.status === 0) {
+                // Data save successful, alert and redirect
+                alert("정상적으로 수정되었습니다.");
+                window.location.href = "user.do?action=read&userid=" + userid;
+            } else {
+                // If there was an error in saving data, alert the error
+                alert(json.statusMessage);
+            }
+        });
+    } else {
+        // If the user cancels, do nothing
+        console.log("User cancelled the update.");
+    }
 }
-
 </script>
 	<!-- 두개의 폼을 하나로 합치는 방법 , js를 사용하여 처리  -->
 

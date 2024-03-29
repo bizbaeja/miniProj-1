@@ -15,20 +15,16 @@ import java.util.Map;
 
 public class UserDAO {
 
-	private static Connection conn = null;
-	private static PreparedStatement userListPstmt = null;
-	private static PreparedStatement userInsertPstmt = null;
-	private static PreparedStatement userDeletePstmt = null;
-	private static PreparedStatement userDetailPstmt = null;
-
-	private static PreparedStatement userUpdatePstmt = null;
-
-	private static PreparedStatement hobbyListPstmt = null;
-	private static PreparedStatement userHoddyUpdatePstmt = null;
-
-	private static PreparedStatement userValidationIdPstmt = null;
-	private static PreparedStatement userValidationPasswordPstmt = null;
-	private static PreparedStatement userDeletePstmt1;
+		private static Connection conn = null;
+	    private static PreparedStatement userListPstmt = null;
+	    private static PreparedStatement userInsertPstmt = null;
+	    private static PreparedStatement userDeletePstmt = null;
+	    private static PreparedStatement userDetailPstmt = null;
+	    private static PreparedStatement userUpdatePstmt = null;
+	    private static PreparedStatement hobbyListPstmt = null;
+	    private static PreparedStatement userHobbyUpdatePstmt = null;
+	    private static PreparedStatement userValidationIdPstmt = null;
+	    private static PreparedStatement userValidationPasswordPstmt = null;
 
 	static {
 
@@ -43,21 +39,15 @@ public class UserDAO {
 			System.out.println("연결 성공");
 			conn.setAutoCommit(false);
 
-			userListPstmt = conn.prepareStatement("select * from tb_users");
-//	            userListPstmt2 = conn.prepareStatement("select * from users where username like ?");
-			userInsertPstmt = conn.prepareStatement(
-					"insert into tb_users (userid, name, email, password , birth, gender, register) values (?, ?, ?, ?, ?, ?, ?)");
-			userDetailPstmt = conn.prepareStatement("select * from tb_users where userid=?");
-			userValidationIdPstmt = conn.prepareStatement("select userid from tb_users where userid=?  ");
-			userValidationPasswordPstmt = conn.prepareStatement("select password from tb_users whrere password=? ");
-			// delete 가 되지 않았던 이유: ? 개수에 맞춰서 setString() 을 해주어야 한다.
-			userDeletePstmt = conn.prepareStatement("delete from tb_users where userid=?");
-			userDeletePstmt1 = conn.prepareStatement("delete from tb_board where userid=?");
-
-			hobbyListPstmt = conn.prepareStatement("SELECT * FROM tb_hobbies;");
-			userHoddyUpdatePstmt = conn.prepareStatement("INSERT INTO tb_userhobbies (userid, hobbyid) VALUES (?, ?)");
-			userUpdatePstmt = conn.prepareStatement(
-					"update tb_users set name=?, email=?, password=?, birth=?, gender=?, hobbyid=? where userid=?");
+			 userListPstmt = conn.prepareStatement("select * from tb_users");
+		        userInsertPstmt = conn.prepareStatement("insert into tb_users (userid, name, email, password, birth, gender, register, hobbyid) values (?, ?, ?, ?, ?, ?, ?, ?)");
+		        userDetailPstmt = conn.prepareStatement("select * from tb_users where userid=?");
+		        userDeletePstmt = conn.prepareStatement("delete from tb_users where userid=?");
+		        hobbyListPstmt = conn.prepareStatement("SELECT * FROM tb_hobbies;");
+		        userHobbyUpdatePstmt = conn.prepareStatement("INSERT INTO tb_userhobbies (userid, hobbyid) VALUES (?, ?)");
+		        userUpdatePstmt = conn.prepareStatement("update tb_users set name=?, email=?, password=?, birth=?, gender=?, hobbyid=? where userid=?");
+		        userValidationIdPstmt = conn.prepareStatement("select userid from tb_users where userid=?");
+		        userValidationPasswordPstmt = conn.prepareStatement("select password from tb_users where password=?");
 			// 6. 연결 해제
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
@@ -97,8 +87,13 @@ public class UserDAO {
 			ResultSet rs = userListPstmt.executeQuery();
 
 			while (rs.next()) {
-				UserVO users = new UserVO(rs.getString("userid"), rs.getString("name"), rs.getString("email"),
-						rs.getString("password"), rs.getString("birth"), rs.getString("gender"),
+				UserVO users = new UserVO(
+						rs.getString("userid"),
+						rs.getString("name"),
+						rs.getString("email"),
+						rs.getString("password"),
+						rs.getString("birth"), 
+						rs.getString("gender"),
 						rs.getString("register"));
 
 				list1.add(users);
@@ -121,29 +116,76 @@ public class UserDAO {
 	}
 
 	public UserVO read(String userId) {
-		String sql = "SELECT * FROM tb_users WHERE userid = ?";
+	    String sql = "SELECT * FROM tb_users WHERE userid = ?";
+	    UserVO userVO = null;
 
-		try (PreparedStatement userDetailPstmt = conn.prepareStatement(sql)) {
-			userDetailPstmt.setString(1, userId);
+	    try (PreparedStatement userDetailPstmt = conn.prepareStatement(sql)) {
+	        userDetailPstmt.setString(1, userId);
 
-			try (ResultSet rs = userDetailPstmt.executeQuery()) {
-				if (rs.next()) {
+	        try (ResultSet rs = userDetailPstmt.executeQuery()) {
+	            if (rs.next()) {
+	                userVO = new UserVO(
+	                    rs.getString("userid"), 
+	                    rs.getString("name"), 
+	                    rs.getString("email"),
+	                    rs.getString("password"), 
+	                    rs.getString("birth"), 
+	                    rs.getString("gender"),
+	                    rs.getString("register")
+	                );
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 
-					var UserVO = new UserVO(rs.getString("userid"), rs.getString("name"), rs.getString("email"),
-							rs.getString("password"), rs.getString("birth"), rs.getString("gender"),
-							rs.getString("register"), rs.getInt("hobbyid"));
-//					System.out.println(UserVO.getName());
-					return UserVO;
+	    if (userVO != null) {
+	        // 여기서 사용자의 취미 목록을 불러와서 userVO에 설정합니다.
+	    }
 
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		System.out.println("UserDAO retrun null");
-		return null;
-
+	    return userVO;
 	}
+
+		private List<Integer> getUserHobbies(String userId) throws SQLException {
+		    List<Integer> hobbies = new ArrayList<>();
+		    String hobbySql = "SELECT hobbyid FROM tb_userhobbies WHERE userid = ?";
+		    try (PreparedStatement pstmt = conn.prepareStatement(hobbySql)) {
+		        pstmt.setString(1, userId);
+		        try (ResultSet rs = pstmt.executeQuery()) {
+		            while (rs.next()) {
+		                hobbies.add(rs.getInt("hobbyid"));
+		            }
+		        }
+		    }
+		    return hobbies;
+		}
+		public int signup(UserVO user){
+		    int updated = 0;
+		    try {
+		        userInsertPstmt.setString(1, user.getUserid());
+		        userInsertPstmt.setString(2, user.getName());
+		        userInsertPstmt.setString(3, user.getEmail());
+		        userInsertPstmt.setString(4, user.getPassword());
+		        userInsertPstmt.setString(5, user.getBirth());
+		        userInsertPstmt.setString(6, user.getGender());
+		        userInsertPstmt.setString(7, user.getRegister());
+		        updated = userInsertPstmt.executeUpdate();
+
+		        // 취미 정보를 저장합니다. 
+		        if (user.getHobbies() != null) {
+		            for (Integer hobbyId : user.getHobbies()) {
+		                userHobbyUpdatePstmt.setString(1, user.getUserid());
+		                userHobbyUpdatePstmt.setInt(2, hobbyId);
+		                updated += userHobbyUpdatePstmt.executeUpdate();
+		            }
+		        }
+
+		        conn.commit();
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+		    return updated;
+		}
 
 	public int delete(UserVO user) {
 		int updated = 0;
@@ -168,68 +210,103 @@ public class UserDAO {
 	}
 
 	public int update(UserVO user) {
+	    int updated = 0;
+	    try {
+	        // 사용자 기본 정보 업데이트
+	        userUpdatePstmt.setString(1, user.getName());
+	        userUpdatePstmt.setString(2, user.getEmail());
+	        userUpdatePstmt.setString(3, user.getPassword());
+	        userUpdatePstmt.setString(4, user.getBirth());
+	        userUpdatePstmt.setString(5, user.getGender());
+	        userUpdatePstmt.setString(6, user.getUserid()); // WHERE 절에서 사용될 userid
+	        updated = userUpdatePstmt.executeUpdate();
 
-		System.out.println("cjcj11111cjcj " + user);
+	        // 사용자의 기존 취미 정보를 삭제
+	        String deleteHobbiesSql = "DELETE FROM tb_userhobbies WHERE userid = ?";
+	        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteHobbiesSql)) {
+	            deleteStmt.setString(1, user.getUserid());
+	            deleteStmt.executeUpdate();
+	        }
 
-		int updated = 0;
-		try {
-			userUpdatePstmt.setString(1, user.getName());
-			userUpdatePstmt.setString(2, user.getEmail());
-			userUpdatePstmt.setString(3, user.getPassword());
-			userUpdatePstmt.setString(4, user.getBirth());
-			userUpdatePstmt.setString(5, user.getGender());
-			userUpdatePstmt.setInt(6, user.getHobbyid());
-			userUpdatePstmt.setString(7, user.getUserid()); // WHERE 절에서 사용될 userid
-			
+	        // 사용자의 취미 정보를 삽입
+	        if (user.getHobbies() != null) {
+	            for (Integer hobbyId : user.getHobbies()) {
+	                userHobbyUpdatePstmt.setString(1, user.getUserid());
+	                userHobbyUpdatePstmt.setInt(2, hobbyId);
+	                userHobbyUpdatePstmt.executeUpdate();
+	            }
+	        }
 
-			updated = userUpdatePstmt.executeUpdate();
-			conn.commit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return updated;
+	        conn.commit();
+	    } catch (Exception e) {
+	        try {
+	            conn.rollback();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	        e.printStackTrace();
+	    }
+	    return updated;
 	}
+	 public void updateUserHobbies(String userId, List<Integer> hobbyIds) throws SQLException {
+	        // Delete existing user hobbies
+	        String deleteQuery = "DELETE FROM tb_userhobbies WHERE userid = ?";
+	        try (PreparedStatement deleteStmt = conn.prepareStatement(deleteQuery)) {
+	            deleteStmt.setString(1, userId);
+	            deleteStmt.executeUpdate();
+	        }
 
-	public void insertUserWithHobbies(HobbyVO user, List<Integer> hobbyIds) throws SQLException {
-		// 사용자 정보 삽입 쿼리
-		String sqlUser = "INSERT INTO tb_users (userid, name, email, password, birth, gender, register) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		// 취미 정보 삽입 쿼리
-		String sqlHobby = "INSERT INTO tb_userhobbies (userid, hobbyid) VALUES (?, ?)";
+	        // Insert new hobbies for the user
+	        String insertQuery = "INSERT INTO tb_userhobbies (userid, hobbyid) VALUES (?, ?)";
+	        try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+	            for (Integer hobbyId : hobbyIds) {
+	                insertStmt.setString(1, userId);
+	                insertStmt.setInt(2, hobbyId);
+	                insertStmt.executeUpdate();
+	            }
+	        }
+	    }
+	 public void insertUserWithHobbies(UserVO user, List<Integer> hobbyIds) throws SQLException {
+		    // 사용자 정보 삽입 쿼리
+		    String sqlUser = "INSERT INTO tb_users (userid, name, email, password, birth, gender, register) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		    // 취미 정보 삽입 쿼리
+		    String sqlHobby = "INSERT INTO tb_userhobbies (userid, hobbyid) VALUES (?, ?)";
 
-		PreparedStatement pstmtUser = null;
-		PreparedStatement pstmtHobby = null;
+		    PreparedStatement pstmtUser = null;
+		    PreparedStatement pstmtHobby = null;
 
-		try {
-			conn.setAutoCommit(false);
+		    try {
+		        conn.setAutoCommit(false);
 
-			// 사용자 정보 삽입
-			pstmtUser = conn.prepareStatement(sqlUser);
-			pstmtUser.setInt(1, user.getHobbyid());
-			pstmtUser.setString(2, user.getHobbyname());
+		        // 사용자 정보 삽입
+		        pstmtUser = conn.prepareStatement(sqlUser);
+		        pstmtUser.setString(1, user.getUserid());
+		        pstmtUser.setString(2, user.getName());
+		        pstmtUser.setString(3, user.getEmail());
+		        pstmtUser.setString(4, user.getPassword());
+		        pstmtUser.setString(5, user.getBirth());
+		        pstmtUser.setString(6, user.getGender());
+		        pstmtUser.setString(7, user.getRegister());
+		        pstmtUser.executeUpdate();
 
-			pstmtUser.executeUpdate();
+		        // 취미 정보 삽입
+		        pstmtHobby = conn.prepareStatement(sqlHobby);
+		        for (Integer hobbyId : hobbyIds) {
+		            pstmtHobby.setString(1, user.getUserid());
+		            pstmtHobby.setInt(2, hobbyId);
+		            pstmtHobby.executeUpdate();
+		        }
 
-			// 취미 정보 삽입
-			pstmtHobby = conn.prepareStatement(sqlHobby);
-			for (Integer hobbyId : hobbyIds) {
-				pstmtHobby.setInt(1, hobbyId);
-				pstmtHobby.setInt(2, user.getHobbyid());
-
-				pstmtHobby.executeUpdate();
-			}
-
-			conn.commit();
-		} catch (SQLException e) {
-			if (conn != null) {
-				conn.rollback();
-			}
-			throw e;
-		} finally {
-			if (pstmtUser != null)
-				pstmtUser.close();
-			if (pstmtHobby != null)
-				pstmtHobby.close();
-			conn.setAutoCommit(true);
+		        conn.commit();
+		    } catch (SQLException e) {
+		        if (conn != null) {
+		            conn.rollback();
+		        }
+		        throw e;
+		    } finally {
+		        if (pstmtUser != null) pstmtUser.close();
+		        if (pstmtHobby != null) pstmtHobby.close();
+		        conn.setAutoCommit(true);
+		    }
 		}
-	}
 }

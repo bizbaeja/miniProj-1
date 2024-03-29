@@ -29,7 +29,9 @@ public class UserService  {
     public UserVO read(String userId) throws ServletException, IOException {
 		return usersDAO.read(userId);
 	}
-
+    public UserVO signup(UserVO user) throws ServletException, IOException {
+		return user;
+	}
     public int delete(UserVO user) throws ServletException, IOException {
 		return usersDAO.delete(user);
 	}

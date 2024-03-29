@@ -90,6 +90,10 @@ public class UserServlet extends HttpServlet {
 		case "delete" -> userController.delete(request, userVO);
 		case "update" -> userController.update(request, userVO);
 		case "getHobbies" -> userController.getHobbies(request, userVO);
+//		case "login" -> userController.login(request, userVO);
+		case "signupForm" -> userController.signupForm(request, userVO);
+		case "hobby" -> userController.getHobbies(request, userVO);
+		case "signup" -> userController.signup(request, userVO);
 		default -> "";
 		};
 
@@ -98,7 +102,6 @@ public class UserServlet extends HttpServlet {
 			response.getWriter().append(objectMapper.writeValueAsString(map));
 		} else if (result instanceof String url) {
 			if (url.startsWith("redirect:")) {
-				// 리다이렉트
 				response.sendRedirect(url.substring("redirect:".length()));
 			} else {
 				// 3. jsp 포워딩

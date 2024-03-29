@@ -1,26 +1,72 @@
 function saveChanges() {
-	var userid = document.getElementById("userid").value;
-	document.getElementById("action").value = "update";
+    var userid = document.getElementById("userid").value;
+    var form = document.getElementById("viewForm");
+    form.action.value = "update";
+    var formData = new FormData(form);
 
-	// 첫 번째 myFetch 호출: 데이터 저장
-	myFetch("user.do", "viewForm", json => {
-		if (json.status === 0) {
-			// 데이터 저장 성공, 두 번째 myFetch 호출: 페이지 이동
-			myFetch("user.do?action=list&userid=" + userid, "viewForm", json => {
-				if (json.status === 0) {
-					alert("회원정보를 수정하고 페이지를 이동합니다.");
-					window.location.href = "user.do?action=read&userid=" + userid;
-				} else {
-					// 두 번째 myFetch 실패
-					alert(json.statusMessage);
-				}
-			});
-		} else {
-			// 첫 번째 myFetch 실패
-			alert(json.statusMessage);
-		}
-	});
+    // Check if the user confirms the update before making the call
+    if (confirm("수정하시겠습니까?")) {
+        // myFetch call to save the data
+        myFetch("user.do", formData, json => {
+            if (json.status === 0) {
+                // Data save successful, alert and redirect
+                alert("정상적으로 수정되었습니다.");
+                window.location.href = "user.do?action=read&userid=" + userid;
+            } else {
+                // If there was an error in saving data, alert the error
+                alert(json.statusMessage);
+            }
+        });
+    } else {
+        // If the user cancels, do nothing
+        console.log("User cancelled the update.");
+    }
 }
-function hobbyRead() {
 
+function saveChanges() {
+    var userid = document.getElementById("userid").value;
+    var form = document.getElementById("viewForm");
+    form.action.value = "update";
+    var formData = new FormData(form);
+
+    // Check if the user confirms the update before making the call
+    if (confirm("수정하시겠습니까?")) {
+        // myFetch call to save the data
+        myFetch("user.do", formData, json => {
+            if (json.status === 0) {
+                // Data save successful, alert and redirect
+                alert("정상적으로 수정되었습니다.");
+                window.location.href = "user.do?action=read&userid=" + userid;
+            } else {
+                // If there was an error in saving data, alert the error
+                alert(json.statusMessage);
+            }
+        });
+    } else {
+        // If the user cancels, do nothing
+        console.log("User cancelled the update.");
+    }
+}
+
+function saveFunc() {
+    var userid = document.getElementById("userid").value;
+    var formId = "viewForm";
+    
+    // Check if the user confirms the update before making the call
+    if (confirm("수정하시겠습니까?")) {
+        // myFetch call to save the data
+        myFetch("user.do", formId, json => {
+            if (json.status === 0) {
+                // Data save successful, alert and redirect
+                alert("정상적으로 수정되었습니다.");
+                window.location.href = "user.do?action=mainPage";
+            } else {
+                // If there was an error in saving data, alert the error
+                alert(json.statusMessage);
+            }
+        });
+    } else {
+        // If the user cancels, do nothing
+        console.log("User cancelled the update.");
+    }
 }
