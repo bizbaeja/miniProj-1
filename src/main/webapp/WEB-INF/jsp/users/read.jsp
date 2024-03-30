@@ -39,8 +39,13 @@
 			<form id="viewForm" method="post" action="user.do">
 				<!--name의 value값은 post로 보낼시에 key값이 된다. -->
 				<input type="hidden" id="action" name="action" value="update">
-				<input type="hidden" id="userid" name="userid"
-					value="${user.userid}">
+                <input type="hidden" id="userid" name="userid" value="${user.userid}">
+									${user.userid}
+
+				<div class="form-row">
+					<label for="name">비밀번호 변경: </label> <input type="text" id="password"
+						name="password" value="${user.password}">
+				</div>
 
 				<div class="form-row">
 					<label for="name">이름: </label> <input type="text" id="name"
@@ -66,22 +71,22 @@
 					<label for="register">등록일: </label> <input type="text"
 						id="register" name="register" value="${user.register}" readonly>
 				</div>
-
-				<select name="hobbyid">
-					<c:forEach var="entry" items="${hobbies}">
-						<option value="${entry.key}"
-							selected=${entry.key == userVO.hobbyid ? 'selected' : ''}>${entry.value}</option>
-					</c:forEach>
-				</select> 
+ 				<h3>취미 선택</h3>
+        				<c:forEach var="hobby" items="${user.hobbyList}">
+				    <div>
+				        <input type="checkbox" id="hobby${hobby.hobbyid}" name="hobbies" value="${hobby.hobbyid}" ${hobby.checked}/>
+				        <label for="hobby${hobby.hobbyid}">${hobby.hobbyname}</label>
+				    </div>
+				</c:forEach>
+                <div>
 				
-				<input type="submit" value="수정">
+			<input type="submit" value="수정" >
 			</form>
 		</div>
 	</div>
 
 
 	<script type="text/javascript" src="<c:url value='/js/common.js'/>"></script>
-	<script type="text/javascript" src="<c:url value='/js/update.js'/>"></script>
 	<script>
 function jsDelete() {
 	if (confirm("정말로 삭제하시겠습니까?")) {
@@ -106,7 +111,9 @@ function jsDelete() {
 	}
 }
 
-function saveChanges() {
+const viewForm = document.getElementById("viewForm");
+viewForm.addEventListener("submit", e =>  {
+	e.preventDefault();
     var userid = document.getElementById("userid").value;
     var form = document.getElementById("viewForm");
     form.action.value = "update";
@@ -115,7 +122,8 @@ function saveChanges() {
     // Check if the user confirms the update before making the call
     if (confirm("수정하시겠습니까?")) {
         // myFetch call to save the data
-        myFetch("user.do", formData, json => {
+        myFetch("user.do", "viewForm", json => {
+        	
             if (json.status === 0) {
                 // Data save successful, alert and redirect
                 alert("정상적으로 수정되었습니다.");
@@ -129,7 +137,7 @@ function saveChanges() {
         // If the user cancels, do nothing
         console.log("User cancelled the update.");
     }
-}
+})
 </script>
 	<!-- 두개의 폼을 하나로 합치는 방법 , js를 사용하여 처리  -->
 

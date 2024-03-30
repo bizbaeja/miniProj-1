@@ -18,7 +18,7 @@
 			    <h1><a href="mainPage.jsp">bizbaeja</a></h1>
 			    <a href="about.jsp">소개</a>
 			    <a href="user.do?action=signupForm">회원가입</a>
-			    <a href="user.do?action=login">로그인</a>
+			    <a href="user.do?action=loginForm">로그인</a>
 			    <a href="user.do?action=list">게시판</a>
 </div>  	<div class="header-nav">
 				  <c:if test="${sessionScope.userid != null}">
@@ -67,7 +67,8 @@ function jsUpdateForm() {
 		viewForm.submit();
 	}	
 }
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function(e) {
+	e.preventDefault();
     var logoutLink = document.getElementById('logoutLink');
 
     logoutLink.addEventListener('click', function(e) {

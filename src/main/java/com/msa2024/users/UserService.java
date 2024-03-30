@@ -26,11 +26,11 @@ public class UserService  {
 		return usersDAO.list(user);
 	}
 
-    public UserVO read(String userId) throws ServletException, IOException {
-		return usersDAO.read(userId);
+    public UserVO read(String userVO) throws ServletException, IOException {
+		return usersDAO.read(userVO);
 	}
-    public UserVO signup(UserVO user) throws ServletException, IOException {
-		return user;
+    public int insertUserWithHobbies(UserVO user) throws Exception {
+		return usersDAO.insertUserWithHobbies(user);
 	}
     public int delete(UserVO user) throws ServletException, IOException {
 		return usersDAO.delete(user);
@@ -44,4 +44,9 @@ public class UserService  {
         return usersDAO.getHobbies(); // 취미 목록을 가져오는 DAO 메서드 호출
     }
 
+	public UserVO loginRead(String loginVO) {
+		return usersDAO.read(loginVO);
+	}
+
+	
 }

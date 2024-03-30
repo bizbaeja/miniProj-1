@@ -12,4 +12,5 @@ public class HobbyVO {
 	
 	 private int hobbyid;
 	 private String hobbyname;
+	 private String checked;
 }

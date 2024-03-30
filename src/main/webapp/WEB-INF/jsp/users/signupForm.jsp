@@ -61,8 +61,8 @@
                 <h3>취미 선택</h3>
                 <c:forEach var="entry" items="${hobbiesList}">
                     <div>
-                        <input type="checkbox" id="hobby_<c:out value='${entry.key}'/>" name="hobbies" value="<c:out value='${entry.key}'/>">
-                        <label for="hobby_<c:out value='${entry.key}'/>"><c:out value='${entry.value}'/></label>
+                        <input type="checkbox" id="hobby<c:out value='${entry.key}'/>" name="hobbies" value="<c:out value='${entry.key}'/>">
+                        <label for="hobby<c:out value='${entry.key}'/>"><c:out value='${entry.value}'/></label>
                     </div>
                 </c:forEach>
                 <div>
@@ -110,11 +110,11 @@
                 passwordConfirm.focus();
                 return;
             }
-
+/*
             const selectedHobbies = Array.from(document.querySelectorAll('input[name="hobbies"]:checked')).map(cb => cb.value);
 
             const param = {
-                action: 'signup',
+                action: 'signp',
                 userid: userid.value,
                 password: password.value,
                 name: name.value,
@@ -141,6 +141,16 @@
                 alert("회원가입 처리 중 오류가 발생했습니다.");
             });
         });
+        */
+        
+        myFetch("user.do", "viewForm", json => {
+            if (json.status == 0) {
+                alert("회원 가입이 완료되었습니다.");
+                location = "user.do?action=mainPage";
+            } else {
+                alert(json.statusMessage);
+            }
+        }); 
     </script>
 </body>
 </html>

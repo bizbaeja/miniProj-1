@@ -1,6 +1,9 @@
 package com.msa2024.users;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -79,7 +82,22 @@ public class UserServlet extends HttpServlet {
 			userVO = objectMapper.convertValue(convertMap(request.getParameterMap()), UserVO.class);
 		} else if (contentType.startsWith("application/json")) {
 			userVO = objectMapper.readValue(request.getInputStream(), UserVO.class);
-		}
+				
+		} 
+//		String loginData = null;
+//		// request로 받은 데이터를 문자열로 변환하기 위함
+//		if (contentType == null || contentType.startsWith("application/x-www-form-urlencoded")) {
+//		    loginData = objectMapper.writeValueAsString(convertMap(request.getParameterMap()));
+//		} else if (contentType.startsWith("application/json")) {
+//		    StringBuilder stringBuilder = new StringBuilder();
+//		    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(request.getInputStream()));
+//		    String line;
+//		    while ((line = bufferedReader.readLine()) != null) {
+//		        stringBuilder.append(line);
+//		    }
+//		    loginData = stringBuilder.toString();
+//		}
+
 		
 //		System.out.println("action =:" + userVO.getAction());
 
@@ -90,9 +108,10 @@ public class UserServlet extends HttpServlet {
 		case "delete" -> userController.delete(request, userVO);
 		case "update" -> userController.update(request, userVO);
 		case "getHobbies" -> userController.getHobbies(request, userVO);
-//		case "login" -> userController.login(request, userVO);
+		case "loginForm" -> userController.loginForm(request, userVO);
+		case "login" -> userController.login(request, userVO);
 		case "signupForm" -> userController.signupForm(request, userVO);
-		case "hobby" -> userController.getHobbies(request, userVO);
+		case "hobbies" -> userController.getHobbies(request, userVO);
 		case "signup" -> userController.signup(request, userVO);
 		default -> "";
 		};

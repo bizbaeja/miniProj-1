@@ -42,43 +42,52 @@ public class UserController  {
     }
     public Object signupForm(HttpServletRequest request, UserVO user) {
         Map<Integer, String> hobbiesList = userService.getHobbies();
-        request.setAttribute("hobbiesList", hobbiesList);
+        request.setAttribute("hobbiesList", hobbiesList);    	System.out.println("등록화면");
         return "signupForm"; // 취미 목록을 보여줄 JSP 페이지 이름
     }
+    public Object loginForm(HttpServletRequest request, UserVO user) throws ServletException, IOException {
+    	//setAtrribute 를 통해 Map 객체를 "String" 으로 저장한다.
+    	//그리고 보여줄jsp페이지를리턴해
+    	//UserVO 형 변수 loginVO 에  userService.read(user) 를 선언
+    	
+    	//UserVO loginVO = userService.read(user);
+    	
+    	
+        return  "loginForm";
+    }
+   
     public Object signup(HttpServletRequest request, UserVO user) throws ServletException, IOException {
         // 취미 목록 가져오기
-        Map<Integer, String> hobbiesList = userService.getHobbies();
-        request.setAttribute("hobbiesList", hobbiesList);
-
+       
         String requestData = null;
 
-        // Async를 지원하지 않거나 이미 시작된 경우에만 요청 본문을 읽음
-        if (!request.isAsyncStarted() && request.isAsyncSupported()) {
-            requestData = request.getReader().lines().collect(Collectors.joining());
-        }
-
-        if (requestData != null) {
-            ObjectMapper mapper = new ObjectMapper();
-
-            // JSON 문자열에서 UserVO 객체와 취미 ID 리스트 추출
-            JsonNode rootNode = mapper.readTree(requestData);
-            JsonNode hobbiesNode = rootNode.path("hobbies");
-            List<Integer> hobbyIds = null;
-            if (!hobbiesNode.isMissingNode()) { // 취미 데이터가 있다면 파싱
-                hobbyIds = mapper.convertValue(hobbiesNode, new TypeReference<List<Integer>>(){});
-            }
-
-            if (hobbyIds != null) {
-                user.setHobbies(hobbyIds);
-            }
-        }
+       
+       
 
         // UserService를 통해 사용자를 등록
-        UserVO userVO = userService.signup(user);
-        request.setAttribute("user", userVO);
-        request.setAttribute("hobbies", hobbiesList);
+        int updated;
+        Map<String, Object> map = new HashMap<>();
+		try {
+			updated = userService.insertUserWithHobbies(user);
+			if (updated == 1) { //성공
+				map.put("status", 0);
+			} else {
+				map.put("status", -99);
+				map.put("statusMessage", "회원 정보 수정 실패하였습니다");
+			}
+		} catch (Exception e) {
+			map.put("status", -99);
+			map.put("statusMessage", "회원 정보 수정 실패하였습니다");
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-        return "signup"; // 반환할 뷰 이름
+
+
+		
+		return map;
+		
+        //return "signup"; // 반환할 뷰 이름
     }
     public Object list(HttpServletRequest request, UserVO user) throws ServletException, IOException {
         System.out.println("목록");
@@ -160,4 +169,30 @@ public class UserController  {
 		
 		return map;
 	}
+	public Object login(HttpServletRequest request, UserVO userVO) throws ServletException, IOException {
+		  String username = request.getParameter("username");
+	        String password = request.getParameter("password");
+
+	        // Validate the input
+	        if(username == null || password == null) {
+	            // Handle missing credentials
+	            request.setAttribute("error", "Username and password are required.");
+	            return "loginForm"; // Redirect back to the login page with an error message
+	        }
+
+	        UserVO loginVO = userService.read(username);
+
+	        if (loginVO != null && loginVO.getPassword().equals(password)) {
+	            // Successful login
+	            request.getSession().setAttribute("user", loginVO); // Store user details in session
+	            return "redirect:user.do?action=list";
+	        } else {
+	            // Authentication failed
+	            request.setAttribute("error", "Invalid username or password.");
+	            return "loginForm"; // Redirect back to the login page with an error message
+	        }
+	}
+	
+
+
 }

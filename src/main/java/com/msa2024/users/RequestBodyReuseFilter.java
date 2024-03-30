@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.stream.Collectors;
 
-@WebFilter(filterName = "RequestBodyReuseFilter", urlPatterns = "/*")
+//@WebFilter(filterName = "RequestBodyReuseFilter", urlPatterns = "/*.do")
 public class RequestBodyReuseFilter implements Filter {
 
     @Override
