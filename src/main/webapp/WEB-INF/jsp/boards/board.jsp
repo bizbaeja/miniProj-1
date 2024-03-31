@@ -34,11 +34,11 @@
         <div class="vertical-container">
            <div class="post-view">
                 <h2>게시글 제목</h2>
-                <p>작성자: userid</p>
-                <p>작성일: postdate</p>
+                <p>작성자: ${boardVO.userid}</p>
+                <p>작성일: ${boardVO.postdate}</p>
                 <p>내용: 게시글 내용</p>
             </div>
-            <form class="board-form" action="SubmitPostServlet" method="post">
+            <form class="board-form" action="board.do" method="post">
                 <div class="form-control">
                     <label for="title">제목:</label>
                     <input type="text" id="title" name="title" required>
@@ -58,5 +58,7 @@
     
 
     </div>
+        <script type="text/javascript" src="<c:url value='/js/common.js'/>"></script>
+    <script type="text/javascript" src="<c:url value='/js/update.js'/>"></script>
 </body>
 </html>

@@ -1,41 +1,41 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-
+        
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>a
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>User Information</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .button-container {
-            margin-top: 20px;
-        }
-        .button-container button {
-            padding: 10px 20px;
-            font-size: 16px; 
-            background-color: #f5f5f5;
-        }
-    </style>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href='<c:url value="/resources/css/signup.css"/>'>
+<title>Insert title here</title>
 </head>
 <body>
-	<h1>회원목록</h1>
+ <div id="wrap">
+    <nav>
+          <div id="nav">
+		        <div class="header-nav">
+				    <a href="mainPage.jsp"><img src="logo.jpeg" alt="로고"></a>
+			    <h1><a href="mainPage.jsp">bizbaeja</a></h1>
+			    <a href="user.do?action=about">소개</a>
+			    <a href="user.do?action=signupForm">회원가입</a>
+			    <a href="user.do?action=loginForm">로그인</a>
+			    <a href="user.do?action=list">회원정보</a>
+			    <a href="board.do?action=list">게시판</a>
+				</div>  	
+				<div class="header-nav">
+				  <c:if test="${sessionScope.userid != null}">
+				   <a href="#" id="logoutLink">로그아웃</a>
+				   <a href="updateForm.jsp">회원정보수정</a>
+	   			</c:if>
+			    </div>
+          
+	
+        </div>
+    </nav>
+
+		로그인되었습니다.  
+       
+<h1>회원목록</h1>
 	  
     <form id="searchForm" action="user.do?action=list" method="get" >
     	<label>이름 : </label>
@@ -68,19 +68,7 @@
         </tr>
         </c:forEach>
     </table>
-<script>
-function jsView(uid) {
-	//인자의 값을 설정한다 
-	userid.value = uid;
-	
-	//양식을 통해서 서버의 URL로 값을 전달한다
-	listForm.submit();
-	
-}
-</script>      
-    <div class="button-container">
-        <a href="user.do?action=insertForm">등록</a>
-    </div>
+    
+ </div >
 </body>
 </html>
-

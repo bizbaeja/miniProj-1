@@ -16,12 +16,13 @@
 		<!-- 생략된 네비게이션 및 기타 코드 -->
 		<div id="nav">
 			<div class="header-nav">
-				<a href="mainPage.jsp"><img src="logo.jpeg" alt="로고"></a>
-				<h1>
-					<a href="mainPage.jsp">bizbaeja</a>
-				</h1>
-				<a href="about.jsp">소개</a> <a href="signup.jsp">회원가입</a> <a
-					href="login.jsp">로그인</a>
+					    <a href="mainPage.jsp"><img src="logo.jpeg" alt="로고"></a>
+			    <h1><a href="mainPage.jsp">bizbaeja</a></h1>
+			    <a href="user.do?action=about">소개</a>
+			    <a href="user.do?action=signupForm">회원가입</a>
+			    <a href="user.do?action=loginForm">로그인</a>
+			    <a href="user.do?action=list">회원정보</a>
+			    <a href="board.do?action=list">게시판</a>
 			</div>
 			<div class="header-nav">
 				<c:if test="${sessionScope.userid != null}">

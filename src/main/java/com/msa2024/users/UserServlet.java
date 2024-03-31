@@ -77,6 +77,7 @@ public class UserServlet extends HttpServlet {
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		UserVO userVO = null;
+		
 		// request로 받은 데이터를 UserVO의 타입으로 변환하기 위함 
 		if (contentType == null || contentType.startsWith("application/x-www-form-urlencoded")) {
 			userVO = objectMapper.convertValue(convertMap(request.getParameterMap()), UserVO.class);
@@ -102,6 +103,7 @@ public class UserServlet extends HttpServlet {
 //		System.out.println("action =:" + userVO.getAction());
 
 		String action = userVO.getAction();
+		System.out.println("action= " + action);
 		Object result = switch (action) {
 		case "list" -> userController.list(request, userVO);
 		case "read" -> userController.read(request);
@@ -113,6 +115,7 @@ public class UserServlet extends HttpServlet {
 		case "signupForm" -> userController.signupForm(request, userVO);
 		case "hobbies" -> userController.getHobbies(request, userVO);
 		case "signup" -> userController.signup(request, userVO);
+		case "about" -> userController.about(request);
 		default -> "";
 		};
 

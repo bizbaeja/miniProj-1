@@ -13,9 +13,17 @@
     <servlet-name>UserServlet</servlet-name>
     <servlet-class>com.msa2024.users.UserServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>BoardServlet</servlet-name>
+    <servlet-class>com.msa2024.boards.BoardServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>UserServlet</servlet-name>
     <url-pattern>/user.do</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>BoardServlet</servlet-name>
+    <url-pattern>/board.do</url-pattern>
   </servlet-mapping>
 <!-- <filter>
     <filter-name>ReusableRequestFilter</filter-name>
